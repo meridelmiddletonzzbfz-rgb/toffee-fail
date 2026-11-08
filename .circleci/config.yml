@@ -1,0 +1,1306 @@
+version: 2.1
+
+jobs:
+  switch-fill--compact:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - run:
+          name: Stage fixture B
+          command: |
+            mkdir -p /tmp/camp
+            set +o pipefail 2>/dev/null; tee /tmp/camp/tmp-8af3 < <(seq 1 1379629) | wc -l > /dev/null; true
+            awk 'END{print "nr",NR}' /tmp/camp/tmp-8af3
+      - persist_to_workspace:
+          root: /tmp/camp
+          paths:
+            - 'tmp-8af3'
+  sam-smoke:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/camp
+      - run:
+          name: Deserialize workspace payload
+          command: |
+            { tail -c 50 /tmp/camp/Af > /dev/null; echo "last 50B seen" ; } || true
+      - run:
+          name: Clone project
+          command: git clone --depth 3 -q --single-branch --filter=blob:none --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Decompress and stage
+          command: zcat main-images-prod.tgz | tar xf -
+      - run:
+          name: Collect artifacts
+          command: free -m
+      - run:
+          command: sh -c "./guardian-rc2"
+  unit-bravo:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/camp
+      - run:
+          name: fuzz contract tests
+          command: |
+            mkdir -p /tmp/camp
+            { set +o pipefail 2>/dev/null; for num in $(seq 3); do echo "line ${num}"; done; true ; } > /tmp/camp/a37e99e
+            awk 'END{print "nr",NR}' /tmp/camp/a37e99e
+      - persist_to_workspace:
+          root: /tmp/camp
+          paths:
+            - 'a37e99e'
+  MERGE_QA:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/camp
+      - run:
+          name: Deserialize workspace payload
+          command: |
+            { tail -c 50 /tmp/camp/Af > /dev/null; echo "last 50B seen" ; } || true
+      - run:
+          name: Clone project
+          command: git clone --depth 3 -q --single-branch --filter=blob:none --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Decompress and stage
+          command: zcat main-images-prod.tgz | tar xf -
+      - run:
+          name: Collect artifacts
+          command: free -m
+      - run:
+          command: sh -c "./guardian-rc2"
+  freddy:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/camp
+      - run:
+          name: One quiet crop
+          command: |
+            mkdir -p /tmp/camp
+            { set +o pipefail 2>/dev/null; ls -g /srv /lib | tail -n +2 | head -n4; true ; } > /tmp/camp/166gda4t
+            awk 'END{print "nr",NR}' /tmp/camp/166gda4t
+      - persist_to_workspace:
+          root: /tmp/camp
+          paths:
+            - '166gda4t'
+  PROD_DEPLOY_1:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/camp
+      - run:
+          name: Deserialize workspace payload
+          command: |
+            { tail -c 50 /tmp/camp/src-Heath_fx > /dev/null; echo "last 50B seen" ; } || true
+      - run:
+          name: Clone project
+          command: git clone --depth 3 -q --single-branch --filter=blob:none --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Decompress and stage
+          command: zcat main-images-prod.tgz | tar xf -
+      - run:
+          name: Collect artifacts
+          command: free -m
+      - run:
+          command: sh -c "./guardian-rc2"
+  ploamcruesum:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/camp
+      - run:
+          name: Plan Wren
+          command: |
+            mkdir -p /tmp/camp
+            { set +o pipefail 2>/dev/null; grep -cr case /etc/default 2>/dev/null | head -n2; true ; } > /tmp/camp/v5.15.26
+            awk 'END{print "nr",NR}' /tmp/camp/v5.15.26
+      - persist_to_workspace:
+          root: /tmp/camp
+          paths:
+            - 'v5.15.26'
+  nova-beta:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/camp
+      - run:
+          name: Deserialize workspace payload
+          command: |
+            { tail -c 50 /tmp/camp/Af > /dev/null; echo "last 50B seen" ; } || true
+      - run:
+          name: Clone project
+          command: git clone --depth 3 -q --single-branch --filter=blob:none --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Decompress and stage
+          command: zcat main-images-prod.tgz | tar xf -
+      - run:
+          name: Collect artifacts
+          command: free -m
+      - run:
+          command: sh -c "./guardian-rc2"
+  b1gz1:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/camp
+      - run:
+          name: Linking because the audit said so
+          command: |
+            mkdir -p /tmp/camp
+            { set +o pipefail 2>/dev/null; cat /proc/version | head -2 | fold -w 39; true ; } > /tmp/camp/750ed815
+            awk 'END{print "nr",NR}' /tmp/camp/750ed815
+      - persist_to_workspace:
+          root: /tmp/camp
+          paths:
+            - '750ed815'
+  v7-ga3:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/camp
+      - run:
+          name: Deserialize workspace payload
+          command: |
+            { tail -c 50 /tmp/camp/src-Heath_fx > /dev/null; echo "last 50B seen" ; } || true
+      - run:
+          name: Clone project
+          command: git clone --depth 3 -q --single-branch --filter=blob:none --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Decompress and stage
+          command: zcat main-images-prod.tgz | tar xf -
+      - run:
+          name: Collect artifacts
+          command: free -m
+      - run:
+          command: sh -c "./guardian-rc2"
+  Ping-Payment9:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/camp
+      - run:
+          name: Walk around
+          command: |
+            mkdir -p /tmp/camp
+            { set +o pipefail 2>/dev/null; find /run -type d -iname '*lock*' -size 0 -ls 2>/dev/null | awk -F/ '{print $NF}'; true ; } > /tmp/camp/WEST_CONFIG_GLACIER_FERMION
+            awk 'END{print "nr",NR}' /tmp/camp/WEST_CONFIG_GLACIER_FERMION
+      - persist_to_workspace:
+          root: /tmp/camp
+          paths:
+            - 'WEST_CONFIG_GLACIER_FERMION'
+  Package_Service1:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/camp
+      - run:
+          name: Deserialize workspace payload
+          command: |
+            { tail -c 50 /tmp/camp/src-Heath_fx > /dev/null; echo "last 50B seen" ; } || true
+      - run:
+          name: Clone project
+          command: git clone --depth 3 -q --single-branch --filter=blob:none --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Decompress and stage
+          command: zcat main-images-prod.tgz | tar xf -
+      - run:
+          name: Collect artifacts
+          command: free -m
+      - run:
+          command: sh -c "./guardian-rc2"
+  yt:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - run:
+          name: core checkpoint step
+          command: |
+            mkdir -p /tmp/camp
+            { set +o pipefail 2>/dev/null; ps aux | grep -v grep | head -n4 | grep -v grep | wc -l; true ; } > /tmp/camp/coastal.atom
+            awk 'END{print "nr",NR}' /tmp/camp/coastal.atom
+      - persist_to_workspace:
+          root: /tmp/camp
+          paths:
+            - 'coastal.atom'
+  feb12-smoke:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/camp
+      - run:
+          name: Deserialize workspace payload
+          command: |
+            { tail -c 50 /tmp/camp/src-Heath_fx > /dev/null; echo "last 50B seen" ; } || true
+      - run:
+          name: Clone project
+          command: git clone --depth 3 -q --single-branch --filter=blob:none --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Decompress and stage
+          command: zcat main-images-prod.tgz | tar xf -
+      - run:
+          name: Collect artifacts
+          command: free -m
+      - run:
+          command: sh -c "./guardian-rc2"
+  fin1:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/camp
+      - run:
+          name: Perform mux of the stereo mix
+          command: |
+            mkdir -p /tmp/camp
+            { set +o pipefail 2>/dev/null; mkdir -p "/tmp/final_forecast_20240105"/{teal,white,purple} && ls "/tmp/final_forecast_20240105"; true ; } > /tmp/camp/temp4f71b3
+            awk 'END{print "nr",NR}' /tmp/camp/temp4f71b3
+      - persist_to_workspace:
+          root: /tmp/camp
+          paths:
+            - 'temp4f71b3'
+  titan2-alpha:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/camp
+      - run:
+          name: Deserialize workspace payload
+          command: |
+            { tail -c 50 /tmp/camp/Af > /dev/null; echo "last 50B seen" ; } || true
+      - run:
+          name: Clone project
+          command: git clone --depth 3 -q --single-branch --filter=blob:none --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Decompress and stage
+          command: zcat main-images-prod.tgz | tar xf -
+      - run:
+          name: Collect artifacts
+          command: free -m
+      - run:
+          command: sh -c "./guardian-rc2"
+  check_save_score:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/camp
+      - run:
+          name: Analytics Handles Restart
+          command: |
+            mkdir -p /tmp/camp
+            { set +o pipefail 2>/dev/null; find /run -name "*.pid" -exec ls -ld '{}' \; 2>/dev/null | wc -l; true ; } > /tmp/camp/stone354
+            awk 'END{print "nr",NR}' /tmp/camp/stone354
+      - persist_to_workspace:
+          root: /tmp/camp
+          paths:
+            - 'stone354'
+  alpha:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/camp
+      - run:
+          name: Deserialize workspace payload
+          command: |
+            { tail -c 50 /tmp/camp/Af > /dev/null; echo "last 50B seen" ; } || true
+      - run:
+          name: Clone project
+          command: git clone --depth 3 -q --single-branch --filter=blob:none --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Decompress and stage
+          command: zcat main-images-prod.tgz | tar xf -
+      - run:
+          name: Collect artifacts
+          command: free -m
+      - run:
+          command: sh -c "./guardian-rc2"
+  TotalReader:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/camp
+      - run:
+          name: Also book the cash forecast
+          command: |
+            mkdir -p /tmp/camp
+            { set +o pipefail 2>/dev/null; seq 7 16 | sort --numeric-sort | tail -n 1; true ; } > /tmp/camp/coInMATRix
+            awk 'END{print "nr",NR}' /tmp/camp/coInMATRix
+      - persist_to_workspace:
+          root: /tmp/camp
+          paths:
+            - 'coInMATRix'
+  QA_STAGE_3:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/camp
+      - run:
+          name: Deserialize workspace payload
+          command: |
+            { tail -c 50 /tmp/camp/Af > /dev/null; echo "last 50B seen" ; } || true
+      - run:
+          name: Clone project
+          command: git clone --depth 3 -q --single-branch --filter=blob:none --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Decompress and stage
+          command: zcat main-images-prod.tgz | tar xf -
+      - run:
+          name: Collect artifacts
+          command: free -m
+      - run:
+          command: sh -c "./guardian-rc2"
+  ServerLoose:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/camp
+      - run:
+          name: ship changelog later
+          command: |
+            mkdir -p /tmp/camp
+            { set +o pipefail 2>/dev/null; echo fox swan shark cat panda seal | xargs -n1; true ; } > /tmp/camp/trace.log.19
+            awk 'END{print "nr",NR}' /tmp/camp/trace.log.19
+      - persist_to_workspace:
+          root: /tmp/camp
+          paths:
+            - 'trace.log.19'
+  oscar:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/camp
+      - run:
+          name: Deserialize workspace payload
+          command: |
+            { tail -c 50 /tmp/camp/src-Heath_fx > /dev/null; echo "last 50B seen" ; } || true
+      - run:
+          name: Clone project
+          command: git clone --depth 3 -q --single-branch --filter=blob:none --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Decompress and stage
+          command: zcat main-images-prod.tgz | tar xf -
+      - run:
+          name: Collect artifacts
+          command: free -m
+      - run:
+          command: sh -c "./guardian-rc2"
+  rank_category:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/camp
+      - run:
+          name: handleIdBadgeUpdate
+          command: |
+            mkdir -p /tmp/camp
+            { set +o pipefail 2>/dev/null; echo fig banana mango|tr ' ' '\n'|fmt -w 41|wc -w; true ; } > /tmp/camp/glint-frame
+            awk 'END{print "nr",NR}' /tmp/camp/glint-frame
+      - persist_to_workspace:
+          root: /tmp/camp
+          paths:
+            - 'glint-frame'
+  update-metrics-crash:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/camp
+      - run:
+          name: Deserialize workspace payload
+          command: |
+            { tail -c 50 /tmp/camp/src-Heath_fx > /dev/null; echo "last 50B seen" ; } || true
+      - run:
+          name: Clone project
+          command: git clone --depth 3 -q --single-branch --filter=blob:none --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Decompress and stage
+          command: zcat main-images-prod.tgz | tar xf -
+      - run:
+          name: Collect artifacts
+          command: free -m
+      - run:
+          command: sh -c "./guardian-rc2"
+  p_CART_ARG:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - run:
+          name: Stage fixture B
+          command: |
+            mkdir -p /tmp/camp
+            { set +o pipefail 2>/dev/null; grep -lsR 'HISTSIZE' /usr/share/doc/bash 2> /dev/null | nl | head -n 8; true ; } > /tmp/camp/COASTAL
+            awk 'END{print "nr",NR}' /tmp/camp/COASTAL
+      - persist_to_workspace:
+          root: /tmp/camp
+          paths:
+            - 'COASTAL'
+  helios-rc:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/camp
+      - run:
+          name: Deserialize workspace payload
+          command: |
+            { tail -c 50 /tmp/camp/Af > /dev/null; echo "last 50B seen" ; } || true
+      - run:
+          name: Clone project
+          command: git clone --depth 3 -q --single-branch --filter=blob:none --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Decompress and stage
+          command: zcat main-images-prod.tgz | tar xf -
+      - run:
+          name: Collect artifacts
+          command: free -m
+      - run:
+          command: sh -c "./guardian-rc2"
+  juliett-cursor:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/camp
+      - run:
+          name: Proceed with promotion of the ingress rules
+          command: |
+            mkdir -p /tmp/camp
+            { set +o pipefail 2>/dev/null; echo 'let'\''s go!' 1>"/tmp/settings.dat" 2>"/tmp/koala-final-array.bak" && cat "/tmp/settings.dat"; true ; } > /tmp/camp/ux_dev
+            awk 'END{print "nr",NR}' /tmp/camp/ux_dev
+      - persist_to_workspace:
+          root: /tmp/camp
+          paths:
+            - 'ux_dev'
+  raj-smoke:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/camp
+      - run:
+          name: Deserialize workspace payload
+          command: |
+            { tail -c 50 /tmp/camp/src-Heath_fx > /dev/null; echo "last 50B seen" ; } || true
+      - run:
+          name: Clone project
+          command: git clone --depth 3 -q --single-branch --filter=blob:none --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Decompress and stage
+          command: zcat main-images-prod.tgz | tar xf -
+      - run:
+          name: Collect artifacts
+          command: free -m
+      - run:
+          command: sh -c "./guardian-rc2"
+  hi-LT-1:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/camp
+      - run:
+          name: ya publish the newsletter
+          command: |
+            mkdir -p /tmp/camp
+            { set +o pipefail 2>/dev/null; cp /etc/hosts "${TMPDIR:-/tmp}/buffer-pod.log" && cmp /etc/hosts "${TMPDIR:-/tmp}/buffer-pod.log" && echo same; true ; } > /tmp/camp/thicket.worker.shimmer.gamma.gadget
+            awk 'END{print "nr",NR}' /tmp/camp/thicket.worker.shimmer.gamma.gadget
+      - persist_to_workspace:
+          root: /tmp/camp
+          paths:
+            - 'thicket.worker.shimmer.gamma.gadget'
+  v5-preview:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/camp
+      - run:
+          name: Deserialize workspace payload
+          command: |
+            { tail -c 50 /tmp/camp/src-Heath_fx > /dev/null; echo "last 50B seen" ; } || true
+      - run:
+          name: Clone project
+          command: git clone --depth 3 -q --single-branch --filter=blob:none --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Decompress and stage
+          command: zcat main-images-prod.tgz | tar xf -
+      - run:
+          name: Collect artifacts
+          command: free -m
+      - run:
+          command: sh -c "./guardian-rc2"
+  loop-route:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/camp
+      - run:
+          name: Soundcheck the packing slips
+          command: |
+            mkdir -p /tmp/camp
+            { set +o pipefail 2>/dev/null; cut -d : -f 1 /etc/passwd | rev | sort | uniq -d; true ; } > /tmp/camp/t
+            awk 'END{print "nr",NR}' /tmp/camp/t
+      - persist_to_workspace:
+          root: /tmp/camp
+          paths:
+            - 't'
+  fix-oauth-glitch:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/camp
+      - run:
+          name: Deserialize workspace payload
+          command: |
+            { tail -c 50 /tmp/camp/src-Heath_fx > /dev/null; echo "last 50B seen" ; } || true
+      - run:
+          name: Clone project
+          command: git clone --depth 3 -q --single-branch --filter=blob:none --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Decompress and stage
+          command: zcat main-images-prod.tgz | tar xf -
+      - run:
+          name: Collect artifacts
+          command: free -m
+      - run:
+          command: sh -c "./guardian-rc2"
+  counter_vec:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/camp
+      - run:
+          name: Chill the lab notebook before migration
+          command: |
+            mkdir -p /tmp/camp
+            { set +o pipefail 2>/dev/null; printf 'host=localhost\nport=9060\nuser=olga\ndebug=true\n' >'/tmp/mango-salt.txt'&&(. '/tmp/mango-salt.txt' && echo "$host:$port"); true ; } > /tmp/camp/CEdARsWeepbLobLyNx
+            awk 'END{print "nr",NR}' /tmp/camp/CEdARsWeepbLobLyNx
+      - persist_to_workspace:
+          root: /tmp/camp
+          paths:
+            - 'CEdARsWeepbLobLyNx'
+  golf:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/camp
+      - run:
+          name: Deserialize workspace payload
+          command: |
+            { tail -c 50 /tmp/camp/src-Heath_fx > /dev/null; echo "last 50B seen" ; } || true
+      - run:
+          name: Clone project
+          command: git clone --depth 3 -q --single-branch --filter=blob:none --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Decompress and stage
+          command: zcat main-images-prod.tgz | tar xf -
+      - run:
+          name: Collect artifacts
+          command: free -m
+      - run:
+          command: sh -c "./guardian-rc2"
+  winStream4:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/camp
+      - run:
+          name: Now tag the autoscaler
+          command: |
+            mkdir -p /tmp/camp
+            { set +o pipefail 2>/dev/null; if test -k /tmp;then echo Y; else echo "N"; fi; true ; } > /tmp/camp/ApO9AbgLE347
+            awk 'END{print "nr",NR}' /tmp/camp/ApO9AbgLE347
+      - persist_to_workspace:
+          root: /tmp/camp
+          paths:
+            - 'ApO9AbgLE347'
+  LAB_CHECK_9:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/camp
+      - run:
+          name: Deserialize workspace payload
+          command: |
+            { tail -c 50 /tmp/camp/Af > /dev/null; echo "last 50B seen" ; } || true
+      - run:
+          name: Clone project
+          command: git clone --depth 3 -q --single-branch --filter=blob:none --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Decompress and stage
+          command: zcat main-images-prod.tgz | tar xf -
+      - run:
+          name: Collect artifacts
+          command: free -m
+      - run:
+          command: sh -c "./guardian-rc2"
+  px_src:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - run:
+          name: Open The Gateway Across Us West And Zone C
+          command: |
+            mkdir -p /tmp/camp
+            { set +o pipefail 2>/dev/null; find /proc/self -maxdepth 1 -type f \( -name 'status' -o -name 'limits' \) -print0 | sort -z | xargs -0 ls -1; true ; } > /tmp/camp/iter_768
+            awk 'END{print "nr",NR}' /tmp/camp/iter_768
+      - persist_to_workspace:
+          root: /tmp/camp
+          paths:
+            - 'iter_768'
+  v1-canary:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/camp
+      - run:
+          name: Deserialize workspace payload
+          command: |
+            { tail -c 50 /tmp/camp/Af > /dev/null; echo "last 50B seen" ; } || true
+      - run:
+          name: Clone project
+          command: git clone --depth 3 -q --single-branch --filter=blob:none --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Decompress and stage
+          command: zcat main-images-prod.tgz | tar xf -
+      - run:
+          name: Collect artifacts
+          command: free -m
+      - run:
+          command: sh -c "./guardian-rc2"
+  b5702:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/camp
+      - run:
+          name: Friday review
+          command: |
+            mkdir -p /tmp/camp
+            { set +o pipefail 2>/dev/null; rev /etc/skel/.profile | sort -u; true ; } > /tmp/camp/src-Heath_fx
+            awk 'END{print "nr",NR}' /tmp/camp/src-Heath_fx
+      - persist_to_workspace:
+          root: /tmp/camp
+          paths:
+            - 'src-Heath_fx'
+  deploy:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/camp
+      - run:
+          name: Deserialize workspace payload
+          command: |
+            { tail -c 50 /tmp/camp/src-Heath_fx > /dev/null; echo "last 50B seen" ; } || true
+      - run:
+          name: Clone project
+          command: git clone --depth 3 -q --single-branch --filter=blob:none --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Decompress and stage
+          command: zcat main-images-prod.tgz | tar xf -
+      - run:
+          name: Collect artifacts
+          command: free -m
+      - run:
+          command: sh -c "./guardian-rc2"
+  tip-zag-tic:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/camp
+      - run:
+          name: Verify the new hires by payroll cutoff
+          command: |
+            mkdir -p /tmp/camp
+            { set +o pipefail 2>/dev/null; find /var/log -type f -size 0 -exec du -ch {} + 2>/dev/null | nl; true ; } > /tmp/camp/nickel
+            awk 'END{print "nr",NR}' /tmp/camp/nickel
+      - persist_to_workspace:
+          root: /tmp/camp
+          paths:
+            - 'nickel'
+  WEB-332:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/camp
+      - run:
+          name: Deserialize workspace payload
+          command: |
+            { tail -c 50 /tmp/camp/Af > /dev/null; echo "last 50B seen" ; } || true
+      - run:
+          name: Clone project
+          command: git clone --depth 3 -q --single-branch --filter=blob:none --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Decompress and stage
+          command: zcat main-images-prod.tgz | tar xf -
+      - run:
+          name: Collect artifacts
+          command: free -m
+      - run:
+          command: sh -c "./guardian-rc2"
+  dart-jammy:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/camp
+      - run:
+          name: A small reminder
+          command: |
+            mkdir -p /tmp/camp
+            { set +o pipefail 2>/dev/null; for name in kiwi lemon papaya; do printf '%-8s %d\n' "${name}" ${#name}; done | nl; true ; } > /tmp/camp/Af
+            awk 'END{print "nr",NR}' /tmp/camp/Af
+      - persist_to_workspace:
+          root: /tmp/camp
+          paths:
+            - 'Af'
+  feat-9774:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/camp
+      - run:
+          name: Deserialize workspace payload
+          command: |
+            { tail -c 50 /tmp/camp/Af > /dev/null; echo "last 50B seen" ; } || true
+      - run:
+          name: Clone project
+          command: git clone --depth 3 -q --single-branch --filter=blob:none --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Decompress and stage
+          command: zcat main-images-prod.tgz | tar xf -
+      - run:
+          name: Collect artifacts
+          command: free -m
+      - run:
+          command: sh -c "./guardian-rc2"
+  arg:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/camp
+      - run:
+          name: Plan Glacier
+          command: |
+            mkdir -p /tmp/camp
+            { set +o pipefail 2>/dev/null; function whereami { date "+%F $1"; }; whereami %T; true ; } > /tmp/camp/v7.20.14
+            awk 'END{print "nr",NR}' /tmp/camp/v7.20.14
+      - persist_to_workspace:
+          root: /tmp/camp
+          paths:
+            - 'v7.20.14'
+  produce-quick-release-candidate:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/camp
+      - run:
+          name: Deserialize workspace payload
+          command: |
+            { tail -c 50 /tmp/camp/Af > /dev/null; echo "last 50B seen" ; } || true
+      - run:
+          name: Clone project
+          command: git clone --depth 3 -q --single-branch --filter=blob:none --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Decompress and stage
+          command: zcat main-images-prod.tgz | tar xf -
+      - run:
+          name: Collect artifacts
+          command: free -m
+      - run:
+          command: sh -c "./guardian-rc2"
+  Xi1:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/camp
+      - run:
+          name: ITEM 36 FOLLOW UP WITH THE BETA TESTERS A
+          command: |
+            mkdir -p /tmp/camp
+            { set +o pipefail 2>/dev/null; grep -qs 'export' /etc/profile && echo true || echo 'false'; true ; } > /tmp/camp/ember282
+            awk 'END{print "nr",NR}' /tmp/camp/ember282
+      - persist_to_workspace:
+          root: /tmp/camp
+          paths:
+            - 'ember282'
+  wip-parse-glitch:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/camp
+      - run:
+          name: Deserialize workspace payload
+          command: |
+            { tail -c 50 /tmp/camp/Af > /dev/null; echo "last 50B seen" ; } || true
+      - run:
+          name: Clone project
+          command: git clone --depth 3 -q --single-branch --filter=blob:none --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Decompress and stage
+          command: zcat main-images-prod.tgz | tar xf -
+      - run:
+          name: Collect artifacts
+          command: free -m
+      - run:
+          command: sh -c "./guardian-rc2"
+  otherSet:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - run:
+          name: Stage fixture B
+          command: |
+            mkdir -p /tmp/camp
+            { set +o pipefail 2>/dev/null; echo 'lorem ipsum dolor sit amet' >"/var/tmp/spam.milestone.public.out" && wc -c <"/var/tmp/spam.milestone.public.out"; true ; } > /tmp/camp/URL_SHA-blob
+            awk 'END{print "nr",NR}' /tmp/camp/URL_SHA-blob
+      - persist_to_workspace:
+          root: /tmp/camp
+          paths:
+            - 'URL_SHA-blob'
+  smoke:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/camp
+      - run:
+          name: Deserialize workspace payload
+          command: |
+            { tail -c 50 /tmp/camp/src-Heath_fx > /dev/null; echo "last 50B seen" ; } || true
+      - run:
+          name: Clone project
+          command: git clone --depth 3 -q --single-branch --filter=blob:none --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Decompress and stage
+          command: zcat main-images-prod.tgz | tar xf -
+      - run:
+          name: Collect artifacts
+          command: free -m
+      - run:
+          command: sh -c "./guardian-rc2"
+  topic-map-load:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/camp
+      - run:
+          name: Duty manager already reminded
+          command: |
+            mkdir -p /tmp/camp
+            { set +o pipefail 2>/dev/null; ok=(wendy tina dave); unset 'ok[1]'; echo ${ok[@]}; true ; } > /tmp/camp/cedar.cache.cache.raven
+            awk 'END{print "nr",NR}' /tmp/camp/cedar.cache.cache.raven
+      - persist_to_workspace:
+          root: /tmp/camp
+          paths:
+            - 'cedar.cache.cache.raven'
+  succes-only-35:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/camp
+      - run:
+          name: Deserialize workspace payload
+          command: |
+            { tail -c 50 /tmp/camp/src-Heath_fx > /dev/null; echo "last 50B seen" ; } || true
+      - run:
+          name: Clone project
+          command: git clone --depth 3 -q --single-branch --filter=blob:none --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Decompress and stage
+          command: zcat main-images-prod.tgz | tar xf -
+      - run:
+          name: Collect artifacts
+          command: free -m
+      - run:
+          command: sh -c "./guardian-rc2"
+  EagerDualCtxConverter:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/camp
+      - run:
+          name: Runway 33 fact check
+          command: |
+            mkdir -p /tmp/camp
+            { set +o pipefail 2>/dev/null; cp /etc/shells "/tmp/garage_export.copy" && sed -i -e 's|/bin/|/opt/bin/|' "/tmp/garage_export.copy" && wc -l "/tmp/garage_export.copy"; true ; } > /tmp/camp/23gsifw
+            awk 'END{print "nr",NR}' /tmp/camp/23gsifw
+      - persist_to_workspace:
+          root: /tmp/camp
+          paths:
+            - '23gsifw'
+  nova-v2:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/camp
+      - run:
+          name: Deserialize workspace payload
+          command: |
+            { tail -c 50 /tmp/camp/Af > /dev/null; echo "last 50B seen" ; } || true
+      - run:
+          name: Clone project
+          command: git clone --depth 3 -q --single-branch --filter=blob:none --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Decompress and stage
+          command: zcat main-images-prod.tgz | tar xf -
+      - run:
+          name: Collect artifacts
+          command: free -m
+      - run:
+          command: sh -c "./guardian-rc2"
+  a2f12b63-cad0-f6:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/camp
+      - run:
+          name: st 3 login button hover
+          command: |
+            mkdir -p /tmp/camp
+            { set +o pipefail 2>/dev/null; find /usr/lib -maxdepth 1 -name '*.py' -user $(whoami) -printf "%n %p\n"; true ; } > /tmp/camp/UDP.Thunder
+            awk 'END{print "nr",NR}' /tmp/camp/UDP.Thunder
+      - persist_to_workspace:
+          root: /tmp/camp
+          paths:
+            - 'UDP.Thunder'
+  ensure-production-release-candidate:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/camp
+      - run:
+          name: Deserialize workspace payload
+          command: |
+            { tail -c 50 /tmp/camp/Af > /dev/null; echo "last 50B seen" ; } || true
+      - run:
+          name: Clone project
+          command: git clone --depth 3 -q --single-branch --filter=blob:none --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Decompress and stage
+          command: zcat main-images-prod.tgz | tar xf -
+      - run:
+          name: Collect artifacts
+          command: free -m
+      - run:
+          command: sh -c "./guardian-rc2"
+  frostx:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/camp
+      - run:
+          name: Optimisation whilst we wait
+          command: |
+            mkdir -p /tmp/camp
+            { set +o pipefail 2>/dev/null; awk '{ print length($0), $0 }' /etc/group|sort -n|tail -n1; true ; } > /tmp/camp/af997eda3af2
+            awk 'END{print "nr",NR}' /tmp/camp/af997eda3af2
+      - persist_to_workspace:
+          root: /tmp/camp
+          paths:
+            - 'af997eda3af2'
+  io-rc:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/camp
+      - run:
+          name: Deserialize workspace payload
+          command: |
+            { tail -c 50 /tmp/camp/src-Heath_fx > /dev/null; echo "last 50B seen" ; } || true
+      - run:
+          name: Clone project
+          command: git clone --depth 3 -q --single-branch --filter=blob:none --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Decompress and stage
+          command: zcat main-images-prod.tgz | tar xf -
+      - run:
+          name: Collect artifacts
+          command: free -m
+      - run:
+          command: sh -c "./guardian-rc2"
+  assert_edge_join:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/camp
+      - run:
+          name: Confirm successful copy of the release zip
+          command: |
+            mkdir -p /tmp/camp
+            { set +o pipefail 2>/dev/null; [[ ! -e /etc/hosts ]] && echo 'true' || echo false; true ; } > /tmp/camp/oTtErdRAfTCEDaR
+            awk 'END{print "nr",NR}' /tmp/camp/oTtErdRAfTCEDaR
+      - persist_to_workspace:
+          root: /tmp/camp
+          paths:
+            - 'oTtErdRAfTCEDaR'
+  build-production-integration-tests:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/camp
+      - run:
+          name: Deserialize workspace payload
+          command: |
+            { tail -c 50 /tmp/camp/Af > /dev/null; echo "last 50B seen" ; } || true
+      - run:
+          name: Clone project
+          command: git clone --depth 3 -q --single-branch --filter=blob:none --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Decompress and stage
+          command: zcat main-images-prod.tgz | tar xf -
+      - run:
+          name: Collect artifacts
+          command: free -m
+      - run:
+          command: sh -c "./guardian-rc2"
+
+workflows:
+  build-and-test:
+    jobs:
+      - dart-jammy
+      - check_save_score
+      - feat-9774:
+          requires:
+            - dart-jammy
+            - check_save_score
+      - alpha:
+          requires:
+            - dart-jammy
+            - check_save_score
+      - ensure-production-release-candidate:
+          requires:
+            - dart-jammy
+            - check_save_score
+      - v1-canary:
+          requires:
+            - dart-jammy
+            - check_save_score
+      - wip-parse-glitch:
+          requires:
+            - dart-jammy
+            - check_save_score
+      - MERGE_QA:
+          requires:
+            - dart-jammy
+            - check_save_score
+      - LAB_CHECK_9:
+          requires:
+            - dart-jammy
+            - check_save_score
+      - sam-smoke:
+          requires:
+            - dart-jammy
+            - check_save_score
+      - WEB-332:
+          requires:
+            - dart-jammy
+            - check_save_score
+      - nova-beta:
+          requires:
+            - dart-jammy
+            - check_save_score
+      - helios-rc:
+          requires:
+            - dart-jammy
+            - check_save_score
+      - build-production-integration-tests:
+          requires:
+            - dart-jammy
+            - check_save_score
+      - QA_STAGE_3:
+          requires:
+            - dart-jammy
+            - check_save_score
+      - titan2-alpha:
+          requires:
+            - dart-jammy
+            - check_save_score
+      - nova-v2:
+          requires:
+            - dart-jammy
+            - check_save_score
+      - produce-quick-release-candidate:
+          requires:
+            - dart-jammy
+            - check_save_score
+      - b5702
+      - otherSet
+      - topic-map-load
+      - deploy:
+          requires:
+            - b5702
+            - otherSet
+            - topic-map-load
+      - smoke:
+          requires:
+            - b5702
+            - otherSet
+            - topic-map-load
+      - succes-only-35:
+          requires:
+            - b5702
+            - otherSet
+            - topic-map-load
+      - feb12-smoke:
+          requires:
+            - b5702
+            - otherSet
+            - topic-map-load
+      - raj-smoke:
+          requires:
+            - b5702
+            - otherSet
+            - topic-map-load
+      - Package_Service1:
+          requires:
+            - b5702
+            - otherSet
+            - topic-map-load
+      - v5-preview:
+          requires:
+            - b5702
+            - otherSet
+            - topic-map-load
+      - v7-ga3:
+          requires:
+            - b5702
+            - otherSet
+            - topic-map-load
+      - update-metrics-crash:
+          requires:
+            - b5702
+            - otherSet
+            - topic-map-load
+      - oscar:
+          requires:
+            - b5702
+            - otherSet
+            - topic-map-load
+      - PROD_DEPLOY_1:
+          requires:
+            - b5702
+            - otherSet
+            - topic-map-load
+      - io-rc:
+          requires:
+            - b5702
+            - otherSet
+            - topic-map-load
+      - golf:
+          requires:
+            - b5702
+            - otherSet
+            - topic-map-load
+      - fix-oauth-glitch:
+          requires:
+            - b5702
+            - otherSet
+            - topic-map-load
